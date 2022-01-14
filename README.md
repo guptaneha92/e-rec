@@ -47,15 +47,15 @@ This is a sub-repo that contains product recommendation engine implementation fi
 
 ### App
 
-The streamlit-based app to render visualize product recommendation and its efficacy.
+The streamlit-based app to visualize product recommendation and its efficacy.
 
 ### Contributors
 
 * [Neha Gupta](https://github.com/guptaneha92)
-* [Vaibhav Mathur]()
-* [Rishav Anand]()
+* [Vaibhav Mathur](https://github.com/vaibhavkmathur)
+* [Rishav Anand](https://github.com/17rishav)
 * [Esha Chouthe]()
-* [Snigdha Rudola]()
+* [Snigdha Rudola](https://github.com/SnigdhaR)
 
 ## References
 
