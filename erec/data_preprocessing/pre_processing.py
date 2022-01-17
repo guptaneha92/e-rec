@@ -165,10 +165,11 @@ class DataProcessing():
 
 
 if __name__=='__main__':
-    DATA_PATH = os.path.abspath(__file__ + "/../../data/raw_files")
-    FILE_PATH = os.path.abspath(__file__ + "/../../data/")
+    DATA_PATH = os.path.abspath(__file__ + "/../../../data/raw_files")
+    FILE_PATH = os.path.abspath(__file__ + "/../../../data")
     LANGUAGE_FILTER = ['en_IN', 'en_AE', 'en_US', 'en_CA', 'en_GB', 'en_SG', 'en_AU']
     pre_process = DataProcessing(data_path=DATA_PATH, language_filter=LANGUAGE_FILTER)
     final_df = pre_process.main()
-    logger.info(f'Prcoessed Data dimensions: {final_df.shape}')
-    final_df.to_csv(FILE_PATH + 'final_df.csv', index=False)
+    logger.info(f'Processed Data dimensions: {final_df.shape}')
+    final_df.to_csv(os.path.join(FILE_PATH, 'final_df.csv'), index=False)
+    logger.info(f'Written Data file to: {FILE_PATH}')
