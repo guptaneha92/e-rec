@@ -22,3 +22,18 @@ class DataProcessing():
         self.data_path = data_path
         self.listing_files = glob.glob(f'{self.data_path}/*.{extension}')
         self.language_filter = language_filter
+    
+    def merge_data_files(self):
+        """Merge raw data files into a dataframe.
+        """
+        df_list = []
+        unique_cols = set()
+        logger.info('Reading raw files')
+        for file in tqdm(self.listing_files):
+            listings = []
+            for line in open(file, 'r', ):
+                listings.append(json.loads(line))
+            temp = pd.json_normalize(listings)
+            df_list.append(temp)
+        self.merged_df = pd.concat(df_list)
+        logger.info('Raw files merged')
