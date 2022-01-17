@@ -77,3 +77,52 @@ class DataProcessing():
         else:
             column_val = np.nan
         return column_val
+    
+    @staticmethod
+    def get_non_ascii_text(row:str, key_val: str, remove_ascii: bool=False) -> str:
+        """Method to extract raw text from the features with flag to remove
+           ascii characters.
+
+        Args:
+            row (str): Raw record
+            key_val (str): Key to fetch data from
+            remove_ascii (bool, optional): Flag to remove ascii characters. Defaults to False.
+
+        Returns:
+            str: Formatted text with optionally removed ascii characters
+        """
+        text_name = np.nan
+        if isinstance(row, float):
+            if math.isnan(row):
+                text_name = np.nan
+        elif len(row):
+            for val in row:
+                text_val = val.get(key_val)
+                if text_val:
+                    text_name = text_val
+                    if remove_ascii:
+                        text_name = ''.join([i if ord(i) < 128 else '' for i in text_name])
+        else:
+            text_name = np.nan
+        return text_name
+
+    @staticmethod
+    def get_normalized_value(row:str, key_val: str) -> str:
+        """Method to extract normalized value from raw records.
+
+        Args:
+            row (str): Raw record
+            key_val (str): Key to fetch data from
+
+        Returns:
+            str: Normalized value associated with the record
+        """
+        if isinstance(row, float):
+            if math.isnan(row):
+                text_val = np.nan
+        elif len(row):
+            text_name = row[0].get(key_val)
+            text_val = text_name.get('value')
+        else:
+            text_val = np.nan
+        return text_val
