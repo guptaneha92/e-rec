@@ -162,3 +162,13 @@ class DataProcessing():
         final_df['length'] = self.merged_df['item_dimensions.length.normalized_value.value']
         final_df['width'] = self.merged_df['item_dimensions.width.normalized_value.value']
         return final_df
+
+
+if __name__=='__main__':
+    DATA_PATH = os.path.abspath(__file__ + "/../../data/raw_files")
+    FILE_PATH = os.path.abspath(__file__ + "/../../data/")
+    LANGUAGE_FILTER = ['en_IN', 'en_AE', 'en_US', 'en_CA', 'en_GB', 'en_SG', 'en_AU']
+    pre_process = DataProcessing(data_path=DATA_PATH, language_filter=LANGUAGE_FILTER)
+    final_df = pre_process.main()
+    logger.info(f'Prcoessed Data dimensions: {final_df.shape}')
+    final_df.to_csv(FILE_PATH + 'final_df.csv', index=False)
