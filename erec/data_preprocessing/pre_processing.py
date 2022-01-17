@@ -126,3 +126,39 @@ class DataProcessing():
         else:
             text_val = np.nan
         return text_val
+    
+    def main(self):
+        logger.info('Initializing data preprocessing class')
+        self.merge_data_files()
+        color_mapping = {'multi-colored': 'multicolor'}
+        final_df = pd.DataFrame()
+        extract_text_cols = ['brand', 'bullet_point', 'item_name', 'model_name', 'item_keywords',
+                             'material', 'style', 'fabric_type', 'product_description', 'finish_type',
+                             'item_shape', 'pattern']
+        metadata_cols = ['item_id', 'marketplace', 'country', 'domain_name', 'country',
+                         'main_image_id', 'other_image_id']
+        extract_ascii_dict = {
+                          'model_year': ['value', False],
+                          'node': ['node_id', False],
+                          'node': ['node_name', True]
+                        }
+        logger.info('Extracting text columns')
+        for col_val in tqdm(extract_text_cols):
+            final_df[col_val] = self.merged_df[col_val].apply(self.extract_text)
+        logger.info('Extracting Ascii filtered text columns')
+        for col_val in tqdm(extract_ascii_dict.keys()):
+            key_val = extract_ascii_dict[col_val][0]
+            remove_ascii_flag = extract_ascii_dict[col_val][1]
+            final_df[col_val] = \
+                self.merged_df[col_val].apply(self.get_non_ascii_text, key_val=key_val, remove_ascii=remove_ascii_flag)
+        logger.info('Extracting metadata columns')
+        for col_val in tqdm(metadata_cols):
+            final_df[col_val] = self.merged_df[col_val]
+        logger.info('Extracting weight, color and product type')
+        final_df['weight'] = self.merged_df['item_weight'].apply(self.get_normalized_value, key_val='normalized_value')
+        final_df['color'] = self.merged_df['color'].apply(self.extract_text).replace(color_mapping)
+        final_df['product_type'] = self.merged_df['product_type'].apply(lambda x: x[0].get('value'))
+        final_df['height'] = self.merged_df['item_dimensions.height.normalized_value.value']
+        final_df['length'] = self.merged_df['item_dimensions.length.normalized_value.value']
+        final_df['width'] = self.merged_df['item_dimensions.width.normalized_value.value']
+        return final_df
