@@ -179,5 +179,5 @@ if __name__=='__main__':
     pre_process = DataProcessing(data_path=DATA_PATH, language_filter=LANGUAGE_FILTER)
     final_df = pre_process.main()
     logger.info(f'Processed Data dimensions: {final_df.shape}')
-    final_df.to_csv(os.path.join(FILE_PATH, 'final_df.csv'), index=False)
+    final_df.to_parquet(os.path.join(FILE_PATH, 'final_df_parquet'), index=False)
     logger.info(f'Written Data file to: {FILE_PATH}')

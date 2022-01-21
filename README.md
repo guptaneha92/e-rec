@@ -13,6 +13,7 @@
 
 1. [Introduction](#introduction)
 1. [Directory Structure](#directory-structure)
+1. [Installation](#installation)
 1. [Contributors](#contributors)
 1. [References](#references)
 
@@ -26,6 +27,7 @@ e-red is a product that recommends most similar ASINs for an Amazon product usin
 .
 ├── data
 ├── research
+├── notebooks
 ├── erec
     ├── metadata_pipeline
     ├── text_pipeline
@@ -49,7 +51,24 @@ This is a sub-repo that contains product recommendation engine implementation fi
 
 The streamlit-based app to visualize product recommendation and its efficacy.
 
-### Contributors
+## Installation
+
+Create a new virtual environment using conda and install necessary packages using `requirements.txt`.
+
+```python
+conda create -n erec python=3.9
+conda activate erec
+pip install -f requirements.txt
+```
+
+To generate the final processed data in `parquet` format run the following set of commands, resulting file would be stored in `data/final_df_parquet`.
+
+```python
+cd data_preprocessing
+python preprocessing.py
+```
+
+## Contributors
 
 * [Neha Gupta](https://github.com/guptaneha92)
 * [Vaibhav Mathur](https://github.com/vaibhavkmathur)
