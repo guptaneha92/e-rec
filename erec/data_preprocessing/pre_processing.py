@@ -1,4 +1,4 @@
-''' Pre-processing sciprt to generate dataframe from raw files'''
+''' Pre-processing script to generate dataframe from raw files'''
 
 import os
 import glob
@@ -36,9 +36,9 @@ class DataProcessing():
             temp = pd.json_normalize(listings)
             df_list.append(temp)
         self.merged_df = pd.concat(df_list)
-        logger.info('Raw files merged')    
+        logger.info('Raw files merged')   
     
-    def extract_text(self, row:str, use_set:bool=False) -> str:
+    def extract_text(self, row:str, use_set:bool=False, dedup:bool=False) -> str:
         """Method to extract raw text from the features.
 
         Args:
@@ -58,14 +58,17 @@ class DataProcessing():
                     column_val.add(np.nan)
                 else:
                     column_val.append(np.nan)
-        elif len(row):
+        elif row:
             for val in row:
                 language_val = val.get('language_tag')
                 if language_val in self.language_filter:
                     feature_val = val.get('value').lower()
-                    if feature_val not in column_val:
-                        if isinstance(column_val, set):
-                            column_val.add(feature_val)
+                    if isinstance(column_val, set):
+                        column_val.add(feature_val)
+                    else:
+                        if dedup:
+                            if feature_val not in column_val:
+                                column_val.append(feature_val)
                         else:
                             column_val.append(feature_val)
         if not column_val:
@@ -95,13 +98,15 @@ class DataProcessing():
         if isinstance(row, float):
             if math.isnan(row):
                 text_name = np.nan
-        elif len(row):
+        elif row:
             for val in row:
                 text_val = val.get(key_val)
                 if text_val:
                     text_name = text_val
                     if remove_ascii:
                         text_name = ''.join([i if ord(i) < 128 else '' for i in text_name])
+                        if not text_name:
+                            text_name = np.nan
         else:
             text_name = np.nan
         return text_name
@@ -120,9 +125,12 @@ class DataProcessing():
         if isinstance(row, float):
             if math.isnan(row):
                 text_val = np.nan
-        elif len(row):
+        elif row:
             text_name = row[0].get(key_val)
-            text_val = text_name.get('value')
+            if text_name: 
+                text_val = text_name.get('value')
+            else:
+                text_val = np.nan
         else:
             text_val = np.nan
         return text_val
@@ -156,7 +164,7 @@ class DataProcessing():
             final_df[col_val] = self.merged_df[col_val]
         logger.info('Extracting weight, color and product type')
         final_df['weight'] = self.merged_df['item_weight'].apply(self.get_normalized_value, key_val='normalized_value')
-        final_df['color'] = self.merged_df['color'].apply(self.extract_text).replace(color_mapping)
+        final_df['color'] = self.merged_df['color'].apply(self.extract_text, use_set=True).replace(color_mapping)
         final_df['product_type'] = self.merged_df['product_type'].apply(lambda x: x[0].get('value'))
         final_df['height'] = self.merged_df['item_dimensions.height.normalized_value.value']
         final_df['length'] = self.merged_df['item_dimensions.length.normalized_value.value']
