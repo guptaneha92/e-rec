@@ -157,7 +157,7 @@ class DataProcessing():
         for col_val in tqdm(extract_ascii_dict.keys()):
             key_val = extract_ascii_dict[col_val][0]
             remove_ascii_flag = extract_ascii_dict[col_val][1]
-            final_df[col_val] = \
+            final_df[key_val] = \
                 self.merged_df[col_val].apply(self.get_non_ascii_text, key_val=key_val, remove_ascii=remove_ascii_flag)
         logger.info('Extracting metadata columns')
         for col_val in tqdm(metadata_cols):
