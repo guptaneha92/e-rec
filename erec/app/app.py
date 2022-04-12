@@ -76,8 +76,8 @@ def display_images(data_df, rec_list_idx, random=False, rows=10, cols=5):
     iter_temp=0
     fig = plt.figure(figsize=(15,8))
     grid = ImageGrid(fig, 111, 
-                nrows_ncols=(10, 5),
-                axes_pad=0.2,
+                     nrows_ncols=(10, 5),
+                     axes_pad=0.2,
                 )
     for i, (ax, im) in enumerate(zip(grid, img_arr)):
         img = tf.keras.preprocessing.image.load_img(im, target_size=(224,224))
@@ -109,16 +109,13 @@ def main():
                 st.session_state['selected_embedding'] = selected_embedding
     try:
         if selected_embedding == 'Combined':
-            print('c')
             comb_sim_scores = combined_pred(image_similarity_scores, text_similarity_scores, image_weight=0.5)
             rec_idx, rec_scores_comb = combined_rec(raw_df, image_similarity_scores, comb_sim_scores, selected_app)
             display_images(raw_df, rec_idx, random=True)
         elif selected_embedding == 'Image':
-            print('i')
             rec_idx, rec_scores = get_rec(raw_df, image_similarity_scores, selected_app)
             display_images(raw_df, rec_idx, random=True)
         else:
-            print('t')
             rec_idx, rec_scores = get_rec(raw_df, text_similarity_scores, selected_app)
             display_images(raw_df, rec_idx, random=True)
     except AttributeError as e:
