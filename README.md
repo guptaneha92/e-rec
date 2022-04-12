@@ -62,11 +62,17 @@ pip install -f requirements.txt
 ```
 
 To generate the final processed data in `parquet` format run the following set of commands, resulting file would be stored in `data/final_df_parquet`.
+Post this we need to run the `data_preprocessing/preprocessing.py`, `image_pipeline/triplets.py` and ` image_pipeline/siamese_train.py` files respectively to generate triplets and finally train the siamese netowrk.
 
 ```python
-cd data_preprocessing
-python preprocessing.py
+cd erec
+python data_preprocessing/preprocessing.py
+python image_pipeline/pre_process.py
+python image_pipeline/triplets.py
+python image_pipeline/siamese_train.py
 ```
+
+Results can be visualized using notebook present inside `notebooks` folder `siamese_inference.ipynb`
 
 ## Contributors
 
@@ -75,8 +81,4 @@ python preprocessing.py
 * [Rishav Anand](https://github.com/17rishav)
 * [Esha Chouthe]()
 * [Snigdha Rudola](https://github.com/SnigdhaR)
-
-## References
-
-### Literature
 
